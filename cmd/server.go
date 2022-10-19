@@ -2,32 +2,38 @@ package main
 
 import (
 	"context"
-	"github.com/prybintsev/stakefish/internal/version"
 	"os"
 	"os/signal"
 	"syscall"
 
-	log "github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 
+	"github.com/prybintsev/stakefish/internal/config"
 	"github.com/prybintsev/stakefish/internal/router"
+	"github.com/prybintsev/stakefish/internal/version"
 )
 
 func listenToSignals(cancel context.CancelFunc) {
 	shutdown := make(chan os.Signal, 1)
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
 	<-shutdown
-	log.Info("Gracefully shutting down the http server")
+	logrus.Info("Gracefully shutting down the http server")
 	cancel()
 }
 
 func main() {
+	logEntry := logrus.WithField("version", version.Version)
+	logEntry.Info("Starting stakefish application")
+
+	cfg := config.Init(logEntry)
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	go listenToSignals(cancel)
-	log.WithField("version", version.Version).Info("Starting stakefish application")
-	err := router.StartHttpServer(ctx)
+
+	err := router.StartHttpServer(ctx, logEntry, cfg)
 	if err != nil {
-		log.WithError(err).Fatal("Authentication server has stopped unexpectedly")
+		logrus.WithError(err).Fatal("Authentication server has stopped unexpectedly")
 	}
-	log.Info("Exiting")
+	logrus.Info("Exiting")
 }
