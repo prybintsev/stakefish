@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"github.com/prybintsev/stakefish/internal/db/migrations"
+	"github.com/prybintsev/stakefish/internal/db/postgres"
 	"os"
 	"os/signal"
 	"syscall"
@@ -31,9 +33,17 @@ func main() {
 	defer cancel()
 	go listenToSignals(cancel)
 
-	err := router.StartHttpServer(ctx, logEntry, cfg)
+	db := postgres.ConnectToPostgres(cfg)
+	err := migrations.MigrateUp(db, cfg, logEntry)
 	if err != nil {
-		logrus.WithError(err).Fatal("Authentication server has stopped unexpectedly")
+		logrus.WithError(err).Error("Failed to perform DB migrations")
+		return
+	}
+
+	err = router.StartHttpServer(ctx, logEntry, cfg, db)
+	if err != nil {
+		logrus.WithError(err).Error("HTTP server has stopped unexpectedly")
+		return
 	}
 	logrus.Info("Exiting")
 }

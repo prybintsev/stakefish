@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/prybintsev/stakefish/internal/models"
 	"net/http"
 	"time"
 
@@ -20,12 +21,6 @@ func NewAboutHandler(logEntry *logrus.Entry, cfg config.AppConfig) AboutHandler 
 	return AboutHandler{logEntry: logEntry, cfg: cfg}
 }
 
-type AboutResponse struct {
-	Version    string `json:"version"`
-	Date       int64  `json:"date"`
-	Kubernetes bool   `json:"kubernetes"`
-}
-
-func (h *AboutHandler) About(c *gin.Context) {
-	c.JSON(http.StatusOK, &AboutResponse{Version: version.Version, Date: time.Now().Unix(), Kubernetes: h.cfg.IsKubernetes})
+func (h *AboutHandler) AppInfo(c *gin.Context) {
+	c.JSON(http.StatusOK, &models.AppInfo{Version: version.Version, Date: time.Now().Unix(), Kubernetes: h.cfg.IsKubernetes})
 }

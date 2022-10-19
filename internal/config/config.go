@@ -6,8 +6,11 @@ import (
 )
 
 type AppConfig struct {
-	IsKubernetes bool `mapstructure:"IS_KUBERNETES"`
-	Port         int  `mapstructure:"PORT"`
+	IsKubernetes bool   `mapstructure:"IS_KUBERNETES"`
+	Port         int    `mapstructure:"PORT"`
+	DBHost       string `mapstructure:"DB_HOST"`
+	DBName       string `mapstructure:"DB_NAME"`
+	DBPort       int    `mapstructure:"DB_PORT"`
 }
 
 func Init(logEntry *logrus.Entry) AppConfig {
@@ -25,9 +28,15 @@ func bindEnvironmentVariables(logEntry *logrus.Entry) {
 	environmentVariables := []string{
 		"IS_KUBERNETES",
 		"PORT",
+		"DB_HOST",
+		"DB_PORT",
+		"DB_NAME",
 	}
 
 	viper.SetDefault("PORT", 3000)
+	viper.SetDefault("DB_HOST", "localhost")
+	viper.SetDefault("DB_PORT", 5432)
+	viper.SetDefault("DB_NAME", "stakefish")
 
 	for _, environmentVariable := range environmentVariables {
 		if err := viper.BindEnv(environmentVariable); err != nil {

@@ -2,7 +2,9 @@ package router
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
+	"github.com/prybintsev/stakefish/internal/db/lookup"
 	"net/http"
 	"time"
 
@@ -13,15 +15,18 @@ import (
 	"github.com/prybintsev/stakefish/internal/config"
 )
 
-func StartHttpServer(ctx context.Context, logEntry *logrus.Entry, cfg config.AppConfig) error {
+func StartHttpServer(ctx context.Context, logEntry *logrus.Entry, cfg config.AppConfig, db *sql.DB) error {
 	router := gin.Default()
 
 	aboutHandler := api.NewAboutHandler(logEntry, cfg)
-	router.GET("/", aboutHandler.About)
+	router.GET("/", aboutHandler.AppInfo)
 
+	lookupRepo := lookup.NewLookupRepo(db)
+	lookupHandler := api.NewIPLookupHandler(logEntry, lookupRepo)
 	v1Group := router.Group("v1")
+	v1Group.GET("history", lookupHandler.History)
+
 	toolsGroup := v1Group.Group("tools")
-	lookupHandler := api.NewIPLookupHandler(logEntry)
 	toolsGroup.GET("lookup", lookupHandler.Lookup)
 	toolsGroup.POST("validate", lookupHandler.Validate)
 

@@ -1,13 +1,13 @@
 package api
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
 
-type ErrorResponse struct {
-	Message string `json:"error"`
-}
+	"github.com/prybintsev/stakefish/internal/models"
+)
 
 func writeErrorResponse(c *gin.Context, code int, message string) {
-	c.JSON(code, ErrorResponse{
+	c.JSON(code, models.ErrorResponse{
 		Message: message,
 	})
 }
