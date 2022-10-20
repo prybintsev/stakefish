@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"os"
 
 	"github.com/golang-migrate/migrate"
 	"github.com/golang-migrate/migrate/database/postgres"
@@ -18,9 +19,9 @@ func MigrateUp(db *sql.DB, cfg config.AppConfig, logEntry *logrus.Entry) error {
 	if err != nil {
 		return fmt.Errorf("cannot create Postgres driver: %v", err)
 	}
-	m, err := migrate.NewWithDatabaseInstance(
-		"file://internal/db/migrations/scripts",
-		cfg.DBName, driver)
+	path, _ := os.Getwd()
+	logrus.Info(fmt.Sprintf("current dir is %s", path))
+	m, err := migrate.NewWithDatabaseInstance(fmt.Sprintf("file://%s", cfg.MigrationsPath), cfg.DBName, driver)
 	if err != nil {
 		return err
 	}

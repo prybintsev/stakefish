@@ -1,0 +1,28 @@
+---
+version: '3'
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: stakefish_user
+      POSTGRES_PASSWORD: stakefish_password
+      POSTGRES_DB: stakefish_db
+  stakefish:
+    build: .
+    container_name: stakefish
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: postgres
+      DB_USER: stakefish_user
+      DB_PASSWORD: stakefish_password
+      DB_NAME: stakefish_db
+      DB_PORT: 5432
+      IS_KUBERNETES: 0
+      PORT: 3000
+      MIGRATIONS_PATH: /service/migrations
+
