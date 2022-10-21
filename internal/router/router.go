@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
+	"github.com/gin-gonic/gin"
 	"github.com/prybintsev/stakefish/internal/api"
 	"github.com/prybintsev/stakefish/internal/config"
 	"github.com/prybintsev/stakefish/internal/db/lookup"
@@ -20,6 +20,8 @@ func StartHttpServer(ctx context.Context, logEntry *logrus.Entry, cfg config.App
 
 	aboutHandler := api.NewAboutHandler(logEntry, cfg)
 	router.GET("/", aboutHandler.AppInfo)
+	router.GET("/metrics", api.PrometheusHandler())
+	router.GET("/health", api.HealthHandler)
 
 	lookupRepo := lookup.NewLookupRepo(db)
 	lookupHandler := api.NewIPLookupHandler(logEntry, lookupRepo)
