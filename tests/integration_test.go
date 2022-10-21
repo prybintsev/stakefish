@@ -3,7 +3,6 @@ package tests
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/prybintsev/stakefish/internal/models"
 	"io"
 	"net/http"
 	"os"
@@ -13,6 +12,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
+
+	"github.com/prybintsev/stakefish/internal/models"
 )
 
 func TestMain(m *testing.M) {

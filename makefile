@@ -8,3 +8,6 @@ build:  $(shell find . -type f -name '*.go')
 
 swagger:
 	swag init -g cmd/main.go --parseDependency
+
+test:
+	go test -v ./tests/...
