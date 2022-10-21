@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/prybintsev/stakefish/internal/db/lookup"
 	"net/http"
 	"time"
 
@@ -13,6 +12,7 @@ import (
 
 	"github.com/prybintsev/stakefish/internal/api"
 	"github.com/prybintsev/stakefish/internal/config"
+	"github.com/prybintsev/stakefish/internal/db/lookup"
 )
 
 func StartHttpServer(ctx context.Context, logEntry *logrus.Entry, cfg config.AppConfig, db *sql.DB) error {
@@ -29,7 +29,6 @@ func StartHttpServer(ctx context.Context, logEntry *logrus.Entry, cfg config.App
 	toolsGroup := v1Group.Group("tools")
 	toolsGroup.GET("lookup", lookupHandler.Lookup)
 	toolsGroup.POST("validate", lookupHandler.Validate)
-
 	addr := fmt.Sprintf(":%d", cfg.Port)
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", cfg.Port),

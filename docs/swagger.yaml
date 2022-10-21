@@ -1,0 +1,134 @@
+basePath: /
+definitions:
+  models.Address:
+    properties:
+      ip:
+        type: string
+    type: object
+  models.AppInfo:
+    properties:
+      date:
+        type: integer
+      kubernetes:
+        type: boolean
+      version:
+        type: string
+    type: object
+  models.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  models.Lookup:
+    properties:
+      addresses:
+        items:
+          $ref: '#/definitions/models.Address'
+        type: array
+      client_ip:
+        type: string
+      created_at:
+        type: integer
+      domain:
+        type: string
+    type: object
+  models.ValidateRequest:
+    properties:
+      ip:
+        type: string
+    type: object
+  models.ValidateResponse:
+    properties:
+      status:
+        type: boolean
+    type: object
+host: localhost:3000
+info:
+  contact: {}
+  title: Stakefish API
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: this endpoint provides the application version the current date
+        and whether it is run on kubernetes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AppInfo'
+      summary: provides the app info
+  /v1/history:
+    get:
+      consumes:
+      - application/json
+      description: Returns 20 last successful lookups
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Lookup'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Lookups history
+  /v1/tools/lookup:
+    get:
+      consumes:
+      - application/json
+      description: this endpoint returns a list of IPv4 addresses of a given domain
+      parameters:
+      - description: Domain
+        in: query
+        name: domain
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Lookup'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: lookups a url IP addresses
+  /v1/tools/validate:
+    post:
+      consumes:
+      - application/json
+      description: Checks whether a given IP is a valid IPv4 address
+      parameters:
+      - description: IP Address
+        in: body
+        name: ip
+        required: true
+        schema:
+          $ref: '#/definitions/models.ValidateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ValidateResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Validates IPv4 address
+swagger: "2.0"
