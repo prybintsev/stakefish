@@ -18,6 +18,8 @@ import (
 	"github.com/prybintsev/stakefish/internal/version"
 )
 
+const x = "bla"
+
 // @title  Stakefish API
 
 // @host      localhost:3000
