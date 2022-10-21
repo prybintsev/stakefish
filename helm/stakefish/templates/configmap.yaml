@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stakefish-configmap
+data:
+  DB_HOST: "stakefish-postgresql"
+  DB_USER: "stakefish_user"
+  DB_PASSWORD: "stakefish_password"
+  DB_NAME: "stakefish_db"
+  DB_PORT: "5432"
+  IS_KUBERNETES: "1"
+  PORT: "3000"
+  MIGRATIONS_PATH: "/service/migrations"

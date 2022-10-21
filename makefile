@@ -1,5 +1,5 @@
 APP=stakefish
-APP_VERSION:=$(shell git describe --tags)
+APP_VERSION:=$(shell git rev-parse HEAD)
 APP_EXECUTABLE="./out/$(APP)"
 
 build:  $(shell find . -type f -name '*.go')
