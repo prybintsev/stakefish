@@ -2,7 +2,7 @@ FROM golang:1.19-alpine as builder
 
 # Install all required dependencies for building
 RUN apk update
-RUN apk add make
+RUN apk add make git
 WORKDIR /service
 
 COPY . .
