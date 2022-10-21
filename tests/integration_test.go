@@ -125,6 +125,7 @@ func TestApi(t *testing.T) {
 
 		var historyResponse []models.Lookup
 		err = json.Unmarshal(body, &historyResponse)
+		require.NoError(t, err)
 		require.Equal(t, 1, len(historyResponse))
 		require.Equal(t, lookupResponse, historyResponse[0])
 	})
