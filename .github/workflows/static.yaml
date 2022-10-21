@@ -9,6 +9,7 @@ jobs:
       matrix:
         go-version: [ 1.19.x ]
         os: [ ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
