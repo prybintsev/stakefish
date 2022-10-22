@@ -2,6 +2,9 @@ name: Build
 
 on: [ push ]
 
+env:
+  APP_VERSION: $(git describe --tags)
+
 jobs:
   build:
     name: Build
@@ -13,13 +16,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - uses: actions/setup-go@v2
         with:
           go-version: 1.19.x
-
-      - name: Build Image
-        run: |
-          docker build .
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -31,7 +32,25 @@ jobs:
         env:
           GIT_SHA: ${{ github.sha }}
         run: |
-          docker build -t chaosord/stakefish:${{ github.sha }} .
-          docker push chaosord/stakefish:${{ github.sha }}
+          docker build -t chaosord/stakefish:$APP_VERSION .
+          docker push chaosord/stakefish:$APP_VERSION
 
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.10.0
+
+      - name: Package
+        run: |
+          cd charts
+          mkdir releases
+          helm package -u -d ./releases --app-version $APP_VERSION
+          git add ./releases
+          git commit -m "publishing release $APP_VERSION"
+          git push
       

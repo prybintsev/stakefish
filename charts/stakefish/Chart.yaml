@@ -20,7 +20,7 @@ version: 0.1.0
 dependencies:
   - name: postgresql
     version: 11.9.11
-    repository: @bitnami
+    repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
 
 # This is the version number of the application being deployed. This version number should be
