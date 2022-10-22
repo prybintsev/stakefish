@@ -44,6 +44,8 @@ postgresql:
     postgresql:
       auth:
         existingSecret: "postgres-secret"
+        secretKeys:
+          userPasswordKey: "password"
         database: "stakefish_db"
         username: "stakefish_user"
       service:

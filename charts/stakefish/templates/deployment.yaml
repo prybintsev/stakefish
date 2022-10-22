@@ -38,7 +38,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: postgres-secret
-                  key: postgres-password
+                  key: password
           envFrom:
             - configMapRef:
                 name: stakefish-configmap
