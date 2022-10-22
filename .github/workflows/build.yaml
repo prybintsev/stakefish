@@ -13,9 +13,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
+        
       - name: Set version env
         run: echo "APP_VERSION=$(git describe --tags)" >> $GITHUB_ENV
       - name: Test
