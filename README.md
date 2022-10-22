@@ -63,7 +63,7 @@ Response:
 }
 ```
 
-## Retrieve lookups history
+### Retrieve lookups history
 
 ```shell
 curl -X 'GET' 'http://localhost:3000/v1/history'  -H 'accept: application/json' | jq
@@ -113,3 +113,16 @@ Response:
   }
 ]
 ```
+
+## CI/CD and Helm Charts
+
+When a new revision is pushed to the main branch, the following github workflows are executed:
+
+ - Integration tests
+ - Lint static check
+ - Building and pushing of docker image to chaosord/stakefish dockerhub repository
+
+When a new tag is pushed to the main branch, a workflow creating a helm chart package is executed.
+Then the package is put under charts/releases and the repo is pushed to the main branch again.
+Ideally I should've used a helm charts repository instead, but using the same github repo is easier in the scope
+of the assignment.
