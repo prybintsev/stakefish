@@ -27,7 +27,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set version env
-        run: echo "APP_VERSION=$(git describe --tags)" >> $GITHUB_ENV
+        run: echo "APP_VERSION=v0.0.2" >> $GITHUB_ENV
       - name: Test
         run: echo $APP_VERSION
 
@@ -48,6 +48,9 @@ jobs:
 
       - name: Package
         run: |
+          echo "Pushing helm chart package"
+          git config --global user.name 'Github action'
+          git config --global user.email 'github-action@users.noreply.github.com'
           cd charts
           mkdir releases
           helm package -u -d ./releases --app-version $APP_VERSION
