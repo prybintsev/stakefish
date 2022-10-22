@@ -7,8 +7,6 @@ replicaCount: 1
 image:
   repository: chaosord/stakefish
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: "4e6b4899b90c3ed97b350f0bed323e0160265cf1"
 
 imagePullSecrets: []
 nameOverride: ""
