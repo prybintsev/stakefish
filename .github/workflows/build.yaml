@@ -28,6 +28,7 @@ jobs:
 
       - name: Set version env
         run: |
+          git fetch --all --tags
           echo $(git tag)
           echo "APP_VERSION=v0.0.2" >> $GITHUB_ENV
       - name: Test
