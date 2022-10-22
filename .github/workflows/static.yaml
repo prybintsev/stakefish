@@ -1,8 +1,9 @@
 name: Linting and Static Code Analysis
 
-push:
-  branches:
-    - main
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
