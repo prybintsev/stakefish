@@ -12,12 +12,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
-        
-      - name: Set version env
-        run: echo "APP_VERSION=$(git describe --tags)" >> $GITHUB_ENV
-      - name: Test
-        run: echo $APP_VERSION
+      - uses: actions/checkout@v3
+        fetch-depth: 0
 
       - uses: actions/setup-go@v2
         with:
@@ -28,6 +24,11 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set version env
+        run: echo "APP_VERSION=$(git describe --tags)" >> $GITHUB_ENV
+      - name: Test
+        run: echo $APP_VERSION
 
       - name: Push Image
         run: |
