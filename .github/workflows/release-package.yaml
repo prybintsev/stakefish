@@ -22,7 +22,6 @@ jobs:
       - name: Set env variables
         run: |
           echo "APP_VERSION=$(git describe --tags)" >> $GITHUB_ENV
-          echo "CHART_VERSION=${APP_VERSION:1}" >> $GITHUB_ENV
 
       - name: Configure Git
         run: |
@@ -36,6 +35,7 @@ jobs:
 
       - name: Package
         run: |
+          echo "CHART_VERSION=${APP_VERSION:1}" >> $GITHUB_ENV
           echo "Pushing helm chart package. APP_VERSION=$APP_VERSION CHART_VERSION=$CHART_VERSION"
           git config --global user.name 'Github action'
           git config --global user.email 'github-action@users.noreply.github.com'
