@@ -40,7 +40,6 @@ jobs:
           git config --global user.name 'Github action'
           git config --global user.email 'github-action@users.noreply.github.com'
           cd charts
-          mkdir releases
           helm package -u -d ./releases --version $CHART_VERSION --app-version $APP_VERSION stakefish
           git add ./releases
           git commit -m "publishing release $APP_VERSION"
