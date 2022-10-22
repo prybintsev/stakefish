@@ -15,10 +15,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - name: Get versiion
-        run: |
-          export APP_VERSION=$(git describe --tags)
       - uses: actions/setup-go@v2
         with:
           go-version: 1.19.x
@@ -31,7 +27,7 @@ jobs:
 
       - name: Push Image
         env:
-          GIT_SHA: ${{ github.sha }}
+          APP_VERSION: $(git describe --tags)
         run: |
           docker build -t chaosord/stakefish:$APP_VERSION .
           docker push chaosord/stakefish:$APP_VERSION
@@ -47,6 +43,8 @@ jobs:
           version: v3.10.0
 
       - name: Package
+        env:
+          APP_VERSION: $(git describe --tags)
         run: |
           cd charts
           mkdir releases
