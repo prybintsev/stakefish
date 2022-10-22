@@ -36,7 +36,7 @@ jobs:
 
       - name: Package
         run: |
-          echo "Pushing helm chart package"
+          echo "Pushing helm chart package. APP_VERSION=$APP_VERSION CHART_VERSION=$CHART_VERSION"
           git config --global user.name 'Github action'
           git config --global user.email 'github-action@users.noreply.github.com'
           cd charts
