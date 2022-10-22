@@ -1,0 +1,48 @@
+name: Release Package
+
+on:
+  push:
+    tags:
+      - '**'
+jobs:
+  build:
+    name: Build
+    strategy:
+      matrix:
+        go-version: [ 1.19.x ]
+        os: [ ubuntu-latest ]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Set env variables
+        run: |
+          echo "APP_VERSION=$(git describe --tags)" >> $GITHUB_ENV
+          echo "CHART_VERSION=${APP_VERSION:1}" >> $GITHUB_ENV
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.10.0
+
+      - name: Package
+        run: |
+          echo "Pushing helm chart package"
+          git config --global user.name 'Github action'
+          git config --global user.email 'github-action@users.noreply.github.com'
+          cd charts
+          mkdir releases
+          helm package -u -d ./releases --version $CHART_VERSION --app-version $APP_VERSION stakefish
+          git add ./releases
+          git commit -m "publishing release $APP_VERSION"
+          git push
+
