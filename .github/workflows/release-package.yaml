@@ -19,9 +19,13 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
 
-      - name: Set env variables
+      - name: Set APP_VERSION
         run: |
           echo "APP_VERSION=$(git describe --tags)" >> $GITHUB_ENV
+
+      - name: Set CHART_VERSION
+        run: |
+          echo "CHART_VERSION=${APP_VERSION:1}" >> $GITHUB_ENV
 
       - name: Configure Git
         run: |
@@ -35,8 +39,7 @@ jobs:
 
       - name: Package
         run: |
-          echo "CHART_VERSION=${APP_VERSION:1}" >> $GITHUB_ENV
-          echo "Pushing helm chart package. APP_VERSION=$APP_VERSION CHART_VERSION=$CHART_VERSION"
+          echo "Pushing helm chart package. APP_VERSION=$(APP_VERSION) CHART_VERSION=$(CHART_VERSION)"
           git config --global user.name 'Github action'
           git config --global user.email 'github-action@users.noreply.github.com'
           cd charts
