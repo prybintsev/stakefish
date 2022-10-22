@@ -18,7 +18,8 @@ jobs:
 
       - name: Set version variable
         run: |
-          cd stakefish
+          echo "$(ls -a)"
+          echo "$(git tag)"
           echo "$(git describe --tags)"
           echo "APP_VERSION=$(git describe --tags)" >> $GITHUB_ENV
 
