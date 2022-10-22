@@ -43,8 +43,10 @@ postgresql:
   global:
     postgresql:
       auth:
+        existingSecret: "postgres-secret"
+        secretKeys:
+          userPasswordKey: "password"
         database: "stakefish_db"
-        password: "stakefish_password"
         username: "stakefish_user"
       service:
         ports:
